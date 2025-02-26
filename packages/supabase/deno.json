@@ -1,0 +1,9 @@
+{
+  "tasks": {
+    "start": "supabase start",
+    "stop": "supabase stop"
+  },
+  "imports": {
+    "@supabase/functions-js": "https://deno.land/x/functions_js@1.3.4/mod.ts"
+  }
+} 
