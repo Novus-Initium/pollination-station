@@ -1,5 +1,6 @@
 "use client";
 
+
 import Link from "next/link";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
@@ -17,9 +18,40 @@ const Home: NextPage = () => {
             <span className="block text-2xl mb-2">Welcome to</span>
             <span className="block text-4xl font-bold">Pollination Station 🌸</span>
           </h1>
-          <p className="text-center text-xl mt-4 max-w-2xl mx-auto">
-            Your hub for DAO collaboration and cross-pollination. Connect, coordinate, and create value together.
-          </p>
+          <div className="text-center text-xl mt-4 max-w-2xl mx-auto">
+            <br/>
+            Your hub for DAO collaboration and cross-pollination.
+            <br/><br/>
+            <div className="flex flex-col gap-4 items-center">
+              <div className="relative group transition-all">
+                <span className="text-3xl font-bold bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent 
+                  hover:scale-105 transform transition-all duration-300 inline-block">
+                  Connect
+                </span>
+                <div className="absolute w-full h-0.5 bg-gradient-to-r from-secondary to-accent scale-x-0 group-hover:scale-x-100 
+                  transition-transform duration-300 -bottom-1"></div>
+              </div>
+              
+              <div className="relative group transition-all">
+                <span className="text-3xl font-bold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent
+                  hover:scale-105 transform transition-all duration-300 inline-block">
+                  Coordinate
+                </span>
+                <div className="absolute w-full h-0.5 bg-gradient-to-r from-accent to-primary scale-x-0 group-hover:scale-x-100
+                  transition-transform duration-300 -bottom-1"></div>
+              </div>
+
+              <div className="relative group transition-all">
+                <span className="text-3xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent
+                  hover:scale-105 transform transition-all duration-300 inline-block">
+                  Create
+                </span>
+                <div className="absolute w-full h-0.5 bg-gradient-to-r from-primary to-secondary scale-x-0 group-hover:scale-x-100
+                  transition-transform duration-300 -bottom-1"></div>
+              </div>
+            </div>
+            <br/><br/>
+          </div>
           <div className="flex justify-center items-center space-x-2 flex-col sm:flex-row mt-4">
             <p className="my-2 font-medium">Connected as:</p>
             <Address address={connectedAddress} />
