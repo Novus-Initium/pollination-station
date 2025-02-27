@@ -17,34 +17,57 @@ app.get('/', (req, res) => {
 // Set up Ethereum provider and contract
 const setupEthereumWatcher = async () => {
   try {
-    // Connect to Ethereum network (replace with your provider URL)
+    // Connect to Ethereum network
     const provider = new ethers.providers.JsonRpcProvider(process.env.ETHEREUM_RPC_URL);
     
     // Contract details
     const contractAddress = process.env.CONTRACT_ADDRESS;
-    const contractABI = require('./contractABI.json');
+    const contractABI = require('../hardhat/artifacts/contracts/YourContract.sol/YourContract.json').abi;
     
     // Create contract instance
     const contract = new ethers.Contract(contractAddress, contractABI, provider);
     
     console.log('Ethereum contract watcher set up successfully');
     
-    // Listen for events (replace 'YourEventName' with the actual event name from your contract)
-    contract.on('YourEventName', (...args) => {
-      // The last argument is the event object
-      const event = args[args.length - 1];
-      const eventData = args.slice(0, -1);
-      
-      console.log('Event detected!');
-      console.log('Transaction Hash:', event.transactionHash);
-      console.log('Block Number:', event.blockNumber);
-      console.log('Event Data:', eventData);
-      
-      // Add your custom logic here to handle the event
+    // Listen for DAOCreated events
+    contract.on('DAOCreated', (daoAddress, title, event) => {
+      console.log('DAOCreated Event:');
+      console.log('- DAO Address:', daoAddress);
+      console.log('- Title:', title);
+      console.log('- TX Hash:', event.transactionHash);
+      console.log('- Block Number:', event.blockNumber);
     });
     
-    // You can listen to multiple events if needed
-    // contract.on('AnotherEvent', (...args) => { ... });
+    // Listen for NeedCreated events
+    contract.on('NeedCreated', (needId, dao, description, event) => {
+      console.log('NeedCreated Event:');
+      console.log('- Need ID:', needId.toString());
+      console.log('- DAO Address:', dao);
+      console.log('- Description:', description);
+      console.log('- TX Hash:', event.transactionHash);
+      console.log('- Block Number:', event.blockNumber);
+    });
+    
+    // Listen for PollinCreated events
+    contract.on('PollinCreated', (
+      pollinId,
+      daoWithNeed,
+      daoWithOffering,
+      needId,
+      descriptionOfRelationship,
+      confidence,
+      event
+    ) => {
+      console.log('PollinCreated Event:');
+      console.log('- Pollin ID:', pollinId.toString());
+      console.log('- DAO with Need:', daoWithNeed);
+      console.log('- DAO with Offering:', daoWithOffering);
+      console.log('- Need ID:', needId.toString());
+      console.log('- Description:', descriptionOfRelationship);
+      console.log('- Confidence:', confidence.toString());
+      console.log('- TX Hash:', event.transactionHash);
+      console.log('- Block Number:', event.blockNumber);
+    });
     
   } catch (error) {
     console.error('Error setting up Ethereum watcher:', error);
