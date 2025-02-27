@@ -51,6 +51,8 @@
   },
   "packageManager": "yarn@3.2.3",
   "devDependencies": {
+    "@graphprotocol/graph-cli": "^0.96.0",
+    "@graphprotocol/graph-ts": "^0.38.0",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10"
   },
