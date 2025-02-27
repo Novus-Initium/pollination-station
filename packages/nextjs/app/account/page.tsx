@@ -6,6 +6,9 @@ import { useAccount } from "wagmi";
 import { BellIcon, HomeIcon, UsersIcon, DocumentTextIcon, TrophyIcon, PlusIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Address } from "~~/components/scaffold-eth";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
+import dynamic from "next/dynamic";
+
+const AddNeed = dynamic(() => import("~~/components/pollination-station/AddNeed"), { ssr: false });
 
 interface DAOAccount {
   name: string;
@@ -183,6 +186,12 @@ const Account: NextPage = () => {
                 ))}
               </div>
             </div>
+          </div>
+
+          {/* Needs Section */}
+          <div className="bg-base-100 rounded-3xl p-6 shadow-lg mt-8">
+            <h3 className="text-xl font-bold mb-6">Your Needs</h3>
+            <AddNeed />
           </div>
         </div>
       </div>
