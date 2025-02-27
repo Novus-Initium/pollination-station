@@ -8,7 +8,7 @@ import { Address } from "~~/components/scaffold-eth";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import dynamic from "next/dynamic";
 
-const AddNeed = dynamic(() => import("~~/components/pollination-station/AddNeed"), { ssr: false });
+const HandleNeed = dynamic(() => import("~~/components/pollination-station/HandleNeed"), { ssr: false });
 
 interface DAOAccount {
   name: string;
@@ -191,7 +191,7 @@ const Account: NextPage = () => {
           {/* Needs Section */}
           <div className="bg-base-100 rounded-3xl p-6 shadow-lg mt-8">
             <h3 className="text-xl font-bold mb-6">Your Needs</h3>
-            <AddNeed />
+            <HandleNeed />
           </div>
         </div>
       </div>

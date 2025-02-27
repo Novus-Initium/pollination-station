@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import { useScaffoldReadContract, useScaffoldWriteContract, useScaffoldContract } from "~~/hooks/scaffold-eth";
 
-const AddNeed = () => {
+const HandleNeed = () => {
   const { address: connectedAddress } = useAccount();
   const [description, setDescription] = useState("");
   const [needs, setNeeds] = useState([]);
@@ -95,4 +95,4 @@ const AddNeed = () => {
   );
 };
 
-export default AddNeed;
+export default HandleNeed;
