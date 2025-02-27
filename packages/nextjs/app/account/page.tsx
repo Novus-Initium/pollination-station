@@ -33,7 +33,6 @@ const mockProposals = [
 const Account: NextPage = () => {
   const { address: connectedAddress } = useAccount();
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [daoAccount, setDaoAccount] = useState<DAOAccount | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [socials, setSocials] = useState("");
@@ -45,14 +44,12 @@ const Account: NextPage = () => {
     args: [connectedAddress],
   });
   console.log("DAO DATA", daoData, isLoading);
-  
+
   const { writeContractAsync } = useScaffoldWriteContract({
     contractName: "PollinationStation",
   });
   // Check if the DAO account exists
   if (!daoData) {
-
-
 
     // If no DAO exists, prompt user to create one
     return (
@@ -126,7 +123,6 @@ const Account: NextPage = () => {
           <div className="flex justify-center mb-8 gap-4">
             {[
               {id: 'dashboard', icon: HomeIcon, label: 'Dashboard'},
-              {id: 'myDAOs', icon: UsersIcon, label: 'My DAOs'},
               {id: 'proposals', icon: DocumentTextIcon, label: 'Proposals'},
               {id: 'matches', icon: TrophyIcon, label: 'Matches'}
             ].map(tab => (
