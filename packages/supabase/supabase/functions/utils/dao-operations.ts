@@ -1,6 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { Configuration, OpenAIApi } from 'npm:openai@3.3.0'
 import type { Dao, Need, Pollen } from '../types/database.ts'
+import { ethers } from "https://esm.sh/ethers@6.13.5"
 
 export interface DaoInput {
   name: string
@@ -11,6 +12,68 @@ export interface DaoInput {
 export interface NeedInput {
   dao_id: number
   description: string
+}
+
+
+export class ethContractOperations {
+  private provider: any;
+  private signer: any;
+  private contract: any;
+
+  constructor() {
+    const privateKey = Deno.env.get('ETH_PRIVATE_KEY');
+    const contractAddress = Deno.env.get('ETH_CONTRACT_ADDRESS');
+    const rpcUrl = Deno.env.get('ETH_RPC_URL');
+    const isProduction = Deno.env.get('ENVIRONMENT') === 'production';
+    const networkName = Deno.env.get('ETH_NETWORK');
+    const contractABI = require(Deno.env.get('ETH_CONTRACT_ABI')).abi
+
+    
+    if (!privateKey || !contractAddress) {
+      throw new Error('Missing required environment variables ETH_PRIVATE_KEY or ETH_CONTRACT_ADDRESS');
+    }
+
+    if (isProduction && !networkName) {
+      throw new Error('Missing required environment variable ETH_NETWORK for production');
+    }
+
+    // In production, use default provider (automatically selects optimal RPC)
+    // For local development, use specified RPC URL
+    if (isProduction) {
+      this.provider = ethers.getDefaultProvider(networkName);
+    } else {
+      if (!rpcUrl) {
+        throw new Error('Missing required environment variable ETH_RPC_URL for local development');
+      }
+      this.provider = new ethers.JsonRpcProvider(rpcUrl);
+    }
+
+    this.signer = new ethers.Wallet(privateKey, this.provider);
+    this.contract = new ethers.Contract(contractAddress, contractABI, this.signer);
+  }
+
+  async updatePollenContract(enrichedPollen: any) {
+    try {
+      // Call contract function with pollen data
+      const tx = await this.contract.updatePollen(
+        enrichedPollen.need_id,
+        enrichedPollen.requesting_dao.public_address,
+        enrichedPollen.fulfilling_dao.public_address,
+        enrichedPollen.confidence_score
+      );
+
+      // Wait for transaction to be mined
+      await tx.wait();
+      
+      console.log("Successfully updated pollen contract for need:", enrichedPollen.need_id);
+      
+      return tx;
+
+    } catch (error) {
+      console.error("Error updating pollen contract:", error);
+      throw error;
+    }
+  }
 }
 
 export class DaoOperations {
@@ -245,7 +308,20 @@ export class DaoOperations {
         results.push(pollen)
       }
 
-      return results
+      // Fetch the complete pollen data with DAO public addresses
+      const { data: enrichedPollen, error: enrichmentError } = await this.supabase
+        .from('pollen')
+        .select(`
+          *,
+          requesting_dao:requesting_dao_id(id, name, public_address),
+          fulfilling_dao:fulfilling_dao_id(id, name, public_address),
+          need:need_id(id, description)
+        `)
+        .eq('need_id', needId)
+      
+      if (enrichmentError) throw enrichmentError
+      
+      return enrichedPollen || []
     } catch (error) {
       console.error('Error updating pollen:', error)
       throw error
