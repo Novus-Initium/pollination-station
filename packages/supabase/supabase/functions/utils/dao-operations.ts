@@ -176,6 +176,31 @@ export class DaoOperations {
     }))
   }
 
+  private async generateCollaborationDescription(
+    needDescription: string,
+    daoDescription: string,
+    requestingDaoName: string,
+    fulfillingDaoName: string
+  ): Promise<string> {
+    const prompt = `Given these two organizations:
+    
+    "${requestingDaoName}" has this need: "${needDescription}"
+    
+    "${fulfillingDaoName}" describes themselves as: "${daoDescription}"
+    
+    Provide a brief, specific explanation of how these two organizations could collaborate. Focus on concrete actions and mutual benefits. Start with mentioning both organizations by name.`
+
+    const response = await this.openai.createChatCompletion({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 200,
+      temperature: 0.7
+    })
+
+    return response.data.choices[0].message?.content || 
+      `${requestingDaoName} and ${fulfillingDaoName} might be able to collaborate based on their descriptions.`
+  }
+
   async updatePollenForNeed(needId: number): Promise<Pollen[]> {
     try {
       const matches = await this.findPotentialMatches(needId)
@@ -196,7 +221,9 @@ export class DaoOperations {
 
         const collaborationDescription = await this.generateCollaborationDescription(
           need.description,
-          fulfillingDao.description
+          fulfillingDao.description,
+          need.daos.name,
+          fulfillingDao.name
         )
 
         const { data: pollen, error } = await this.supabase
@@ -249,28 +276,6 @@ export class DaoOperations {
       console.error('Error updating pollen for DAO:', error)
       throw error
     }
-  }
-
-  private async generateCollaborationDescription(
-    needDescription: string,
-    daoDescription: string
-  ): Promise<string> {
-    const prompt = `Given these two descriptions:
-    
-    DAO Need: "${needDescription}"
-    Potential Collaborator: "${daoDescription}"
-    
-    Provide a brief, specific explanation of how these two could collaborate. Focus on concrete actions and mutual benefits.`
-
-    const response = await this.openai.createChatCompletion({
-      model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
-      max_tokens: 200,
-      temperature: 0.7
-    })
-
-    return response.data.choices[0].message?.content || 
-      "These organizations might be able to collaborate based on their descriptions."
   }
 
   async updatePollen(pollenData: PollenData) {

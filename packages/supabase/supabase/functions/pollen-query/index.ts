@@ -5,7 +5,7 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0"
 import type { Pollen } from '../types/database.ts'
 
 interface PollenQueryParams {
