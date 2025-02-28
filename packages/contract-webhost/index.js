@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const ethers = require("ethers");
 const { createClient } = require("@supabase/supabase-js");
-require("dotenv").config();
+require("dotenv").config({ path: ".env.local" });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
