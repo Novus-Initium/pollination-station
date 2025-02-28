@@ -41,7 +41,7 @@ contract PollinationStation {
     uint256 public pollinCount;
 
     // Events for off-chain indexing (e.g., The Graph)
-    event DAOCreated(address indexed daoAddress, string title);
+    event DAOCreated(address indexed daoAddress, string title, string description, string socials);
     event NeedCreated(uint256 indexed needId, address indexed dao, string description);
     event PollinCreated(
         uint256 indexed pollinId,
@@ -70,7 +70,7 @@ contract PollinationStation {
             pollinIds: new uint256[](0) // Initialize empty array
         });
 
-        emit DAOCreated(daoAddress, _title);
+        emit DAOCreated(daoAddress, _title, _description, _socials);
     }
 
     // Function 2: Add a Need associated with a DAO
@@ -126,6 +126,7 @@ contract PollinationStation {
             _confidence
         );
 
+        daos[_daoWithNeed].pollinIds.push(newPollinId);
         return newPollinId;
     }
 

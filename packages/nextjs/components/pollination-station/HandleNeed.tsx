@@ -28,7 +28,7 @@ const HandleNeed = () => {
   });
 
   useEffect(() => {
-    if (needIds.length > 0) {
+    if (needIds.length > 0 && needs.length !== needIds.length) {
       const fetchNeeds = async () => {
         const needsData = await Promise.all(
           needIds.map(async (needId) => {
@@ -71,8 +71,8 @@ const HandleNeed = () => {
             {needs.map((need, index) => (
               <li key={index} className="mb-4">
                 <div className="bg-base-100 rounded-3xl p-6 shadow-lg">
-                  <h3 className="text-xl font-bold">Need ID: {need[0]}</h3>
-                  <p className="text-sm opacity-70">Description: {need[1]}</p>
+                  <h3 className="text-xl font-bold">Need ID: {need?.[0] || ""}</h3>
+                  {/* <p className="text-sm opacity-70">Description: {need.[1]}</p> */}
                 </div>
               </li>
             ))}

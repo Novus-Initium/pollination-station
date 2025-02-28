@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ContractFunctionExecutionError } from "viem";
 import { useAccount } from "wagmi";
 import { useScaffoldReadContract, useScaffoldWriteContract, useScaffoldContract } from "~~/hooks/scaffold-eth";
@@ -9,11 +9,15 @@ const HandlePollin = () => {
   const { address: connectedAddress } = useAccount();
   const [needs, setNeeds] = useState([]);
   const [needIds, setNeedIds] = useState([]);
-  const [selectedNeedId, setSelectedNeedId] = useState(0);
+  const [pollinIds, setPollinIds] = useState([]);
+  const [pollins, setPollins] = useState([]);
+  const [selectedNeedId, setSelectedNeedId] = useState(1);
   const [daoWithOffering, setDaoWithOffering] = useState("");
   const [descriptionOfRelationship, setDescriptionOfRelationship] = useState("");
   const [confidence, setConfidence] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingNeeds, setIsLoadingNeeds] = useState(false);
+  const [isLoadingPollins, setIsLoadingPollins] = useState(false);
 
   // Use the scaffold-eth hook to read the contract
   const daoDataResult = useScaffoldReadContract({
@@ -22,9 +26,16 @@ const HandlePollin = () => {
     args: [connectedAddress],
   });
 
+
   useEffect(() => {
-    if (daoDataResult.data && daoDataResult.data[3]) {
-      setNeedIds(daoDataResult.data[3] as any);
+    if (daoDataResult.data) {
+      if (daoDataResult.data[3]) {
+        setNeedIds(daoDataResult.data[3] as any);
+      }
+      if (daoDataResult.data[4]) {
+        setPollinIds(daoDataResult.data[4] as any);
+        console.log("pollins", daoDataResult.data[4]);
+      }
     }
   }, [daoDataResult.data]);
 
@@ -32,28 +43,55 @@ const HandlePollin = () => {
     contractName: "PollinationStation",
   });
 
+  // Memoize the fetch functions using useCallback
+  const fetchNeeds = useCallback(async () => {
+    if (!pollinationStationContract || isLoadingNeeds) return;
+    setIsLoadingNeeds(true);
+    try {
+      const needsData = await Promise.all(
+        needIds.map(async (needId) => {
+          const result = await pollinationStationContract.read.getNeed([needId]);
+          return result;
+        })
+      );
+      setNeeds(needsData as any);
+    } catch (error) {
+      console.error("Error fetching needs:", error);
+    } finally {
+      setIsLoadingNeeds(false);
+    }
+  }, [needIds, pollinationStationContract, isLoadingNeeds]);
+
+  const fetchPollins = useCallback(async () => {
+    if (!pollinationStationContract || isLoadingPollins) return;
+    setIsLoadingPollins(true);
+    try {
+      const pollinsData = await Promise.all(
+        pollinIds.map(async (pollinId) => {
+          const result = await pollinationStationContract.read.getPollin([pollinId]);
+          return result;
+        })
+      );
+      setPollins(pollinsData as any);
+    } catch (error) {
+      console.error("Error fetching pollins:", error);
+    } finally {
+      setIsLoadingPollins(false);
+    }
+  }, [pollinIds, pollinationStationContract, isLoadingPollins]);
+
+  // Update useEffects to use memoized functions with proper dependencies
   useEffect(() => {
-    if (needIds.length > 0 && needIds.length !== needs.length && !isLoading && pollinationStationContract) {
-      const fetchNeeds = async () => {
-        setIsLoading(true);
-        try {
-          const needsData = await Promise.all(
-            needIds.map(async (needId) => {
-              const result = await pollinationStationContract.read.getNeed([needId]);
-              return result;
-            })
-          );
-          console.log("needsData", needsData);
-          setNeeds(needsData as any);
-        } catch (error) {
-          console.error("Error fetching needs:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
+    if (needIds.length > 0 && needIds.length !== needs.length) {
       fetchNeeds();
     }
-  }, [needIds, pollinationStationContract]);
+  }, [needIds, needs.length, fetchNeeds]);
+
+  useEffect(() => {
+    if (pollinIds.length > 0 && pollinIds.length !== pollins.length) {
+      fetchPollins();
+    }
+  }, [pollinIds, pollins.length, fetchPollins]);
 
   const { writeContractAsync } = useScaffoldWriteContract({
     contractName: "PollinationStation",
@@ -62,27 +100,26 @@ const HandlePollin = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-        await writeContractAsync({
-            functionName: "addPollin",
-            args: [
-            connectedAddress,
-            daoWithOffering,
-            BigInt(selectedNeedId),
-            descriptionOfRelationship,
-            BigInt(Math.round(confidence * 100)),
-            ],
-        });
-        setDaoWithOffering("");
-        // setSelectedNeedId(0);
-        setDescriptionOfRelationship("");
-        setConfidence(0);
+      await writeContractAsync({
+        functionName: "addPollin",
+        args: [
+          connectedAddress,
+          daoWithOffering,
+          BigInt(selectedNeedId),
+          descriptionOfRelationship,
+          BigInt(Math.round(confidence * 100)),
+        ],
+      });
+      setDaoWithOffering("");
+      setDescriptionOfRelationship("");
+      setConfidence(0);
     } catch (e: any) {
-        if (e instanceof ContractFunctionExecutionError) {
-            console.error("Error adding pollin:", e);
-            console.log("selectedNeedId", selectedNeedId);
-        } else {
-            console.error("Error adding pollin:", e);
-        }
+      if (e instanceof ContractFunctionExecutionError) {
+        console.error("Error adding pollin:", e);
+        console.log("selectedNeedId", selectedNeedId);
+      } else {
+        console.error("Error adding pollin:", e);
+      }
     }
   };
 
@@ -98,24 +135,24 @@ const HandlePollin = () => {
             className="select select-bordered w-full"
             value={selectedNeedId}
             onChange={(e) => {
-                try{
-                    console.log("e.target.value", e.target.value);
-                    const needId = parseFloat(e.target.value);
-                    console.log("needId", needId);
-                    setSelectedNeedId(needId);
-                } catch (e) {
-                    if (e instanceof ContractFunctionExecutionError) {
-                        console.error("Error adding pollin:", e.message);
-                    } else {
-                        console.error("Error adding pollin:", e);
-                    }
+              try {
+                console.log("e.target.value", e.target.value);
+                const needId = parseFloat(e.target.value);
+                console.log("needId", needId);
+                setSelectedNeedId(needId);
+              } catch (e) {
+                if (e instanceof ContractFunctionExecutionError) {
+                  console.error("Error adding pollin:", e.message);
+                } else {
+                  console.error("Error adding pollin:", e);
                 }
+              }
             }}
           >
             <option value="" disabled>Select Need</option>
             {needs.map((need, index) => (
-              <option key={index} value={index+1}>
-                {`Need ID: ${index+1} - ${need?.[0]}`}
+              <option key={index} value={index + 1}>
+                {`Need ID: ${index + 1} - ${need?.[0]}`}
               </option>
             ))}
           </select>
@@ -146,9 +183,32 @@ const HandlePollin = () => {
             Add Pollin
           </button>
         </form>
+        <div className="mt-8">
+          <h2 className="text-xl font-bold mb-4">Your Pollins</h2>
+          {
+          
+          pollins.length > 0 ? (
+            <ul>
+              {pollins.map((pollinItem, index) => (
+                <li key={index} className="mb-4">
+                  <div className="bg-base-100 rounded-3xl p-6 shadow-lg">
+                    <p className="text-sm opacity-70">DAO with Need: {pollinItem[0]}</p>
+                    <p className="text-sm opacity-70">DAO with Offering: {pollinItem[1]}</p>
+                    <p className="text-sm opacity-70">Need ID: {(pollinItem[2] as BigInt).toString()}</p>
+                    <p className="text-sm opacity-70">Description: {pollinItem[3]}</p>
+                    <p className="text-sm opacity-70">Confidence: {(pollinItem[4] as BigInt).toString()}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm opacity-70">No pollins available.</p>
+          )}
+        </div>
       </div>
     </div>
   );
 };
+
 
 export default HandlePollin;
