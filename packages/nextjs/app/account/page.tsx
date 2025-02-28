@@ -8,6 +8,7 @@ import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 import dynamic from "next/dynamic";
 import NavigationTabs from "~~/components/pollination-station/NavigationTabs";
 import DAOCard from "~~/components/pollination-station/DAOCard";
+import ProposalCard from "~~/components/pollination-station/ProposalCard";
 
 const HandleNeed = dynamic(() => import("~~/components/pollination-station/HandleNeed"), { ssr: false });
 const HandlePollin = dynamic(() => import("~~/components/pollination-station/HandlePollin"), { ssr: false });
@@ -35,11 +36,12 @@ const Account: NextPage = () => {
     args: [connectedAddress],
   });
 
+  console.log("activeTab", activeTab);
+
   // Check if the DAO account exists
   if (!daoData) {
     // If no DAO exists, prompt user to create one
     return <CreateDAOForm />;
-    console.log(activeTab)
   }
 
   // If DAO exists, display the current interface
@@ -84,18 +86,7 @@ const Account: NextPage = () => {
               </div>
               <div className="space-y-4">
                 {mockProposals.map(proposal => (
-                  <div key={proposal.id} className="p-4 bg-base-200 rounded-xl">
-                    <div className="flex justify-between mb-2">
-                      <h4 className="font-bold">{proposal.title}</h4>
-                      <span className={`badge ${proposal.status === 'Active' ? 'badge-primary' : 'badge-ghost'}`}>
-                        {proposal.status}
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-sm opacity-70">
-                      <span>{proposal.dao}</span>
-                      <span>{proposal.created}</span>
-                    </div>
-                  </div>
+                  <ProposalCard key={proposal.id} id={proposal.id} title={proposal.title} dao={proposal.dao} status={proposal.status} votes={proposal.votes} created={proposal.created} />
                 ))}
               </div>
             </div>
