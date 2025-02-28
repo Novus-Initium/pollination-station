@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     PollinationStation: {
-      address: "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+      address: "0x9A676e781A523b5d0C0e43731313A708CB607508",
       abi: [
         {
           inputs: [
@@ -269,7 +269,6 @@ const deployedContracts = {
               name: "pollinIds",
               type: "uint256[]",
             },
-
           ],
           stateMutability: "view",
           type: "function",
