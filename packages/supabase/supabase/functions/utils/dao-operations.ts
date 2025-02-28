@@ -54,27 +54,27 @@ export class ethContractOperations {
   }
 
   async updatePollenContract(enrichedPollen: any) {
-  //   try {
+    try {
       
-  //     // Call contract function with pollen data
-  //         console.log("Updating pollen contract for need:", enrichedPollen[0]);
-  //         const tx = await this.contract.addPollin(
-  //         enrichedPollen[0].requesting_dao.public_address,
-  //         enrichedPollen[0].fulfilling_dao.public_address,
-  //         enrichedPollen[0].need_id,
-  //         enrichedPollen[0].collaboration_description,
-  //         Math.floor(enrichedPollen[0].confidence_score * 100)
-  //         );
+      // Call contract function with pollen data
+          console.log("Updating pollen contract for need:", enrichedPollen[0]);
+          const tx = await this.contract.addPollin(
+          enrichedPollen[0].requesting_dao.public_address,
+          enrichedPollen[0].fulfilling_dao.public_address,
+          enrichedPollen[0].contract_need_id,
+          enrichedPollen[0].collaboration_description,
+          Math.floor(enrichedPollen[0].confidence_score * 100)
+          );
 
-  //         await tx.wait();
+          await tx.wait();
       
-  //         console.log("Successfully updated pollen contract for need:", enrichedPollen.need_id);
+          console.log("Successfully updated pollen contract for need:", enrichedPollen.need_id);
       
-  //   } catch (error) {
-  //     console.error("Error updating pollen contract:", error);
-  //     throw error;
-  //   }
-  // }
+    } catch (error) {
+      console.error("Error updating pollen contract:", error);
+      throw error;
+    }
+
   }
 }
 
@@ -334,13 +334,26 @@ export class DaoOperations {
           *,
           requesting_dao:requesting_dao_id(id, name, public_address),
           fulfilling_dao:fulfilling_dao_id(id, name, public_address),
-          need:need_id(id, description)
+          need:need_id(id, description, contract_need_id)
         `)
         .eq('need_id', needId)
       
       if (enrichmentError) throw enrichmentError
       
-      return enrichedPollen || []
+      // Transform the data to use contract_need_id as need_id in the response
+      const transformedPollen = enrichedPollen?.map(pollen => {
+        // Create a copy of the pollen object
+        const transformed = { ...pollen };
+        
+        // If contract_need_id exists, use it as the need_id for the contract
+        if (pollen.need?.contract_need_id) {
+          transformed.contract_need_id = pollen.need.contract_need_id;
+        }
+        
+        return transformed;
+      }) || [];
+      
+      return transformedPollen;
     } catch (error) {
       console.error('Error updating pollen:', error)
       throw error
