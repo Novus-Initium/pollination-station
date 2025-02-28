@@ -9,7 +9,7 @@ import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaf
 import dynamic from "next/dynamic";
 
 const HandleNeed = dynamic(() => import("~~/components/pollination-station/HandleNeed"), { ssr: false });
-
+const HandlePollin = dynamic(() => import("~~/components/pollination-station/HandlePollin"), { ssr: false });
 interface DAOAccount {
   name: string;
   description: string;
@@ -46,7 +46,6 @@ const Account: NextPage = () => {
     functionName: "getDAO",
     args: [connectedAddress],
   });
-  console.log("DAO DATA", daoData, isLoading);
 
   const { writeContractAsync } = useScaffoldWriteContract({
     contractName: "PollinationStation",
@@ -192,6 +191,11 @@ const Account: NextPage = () => {
           <div className="bg-base-100 rounded-3xl p-6 shadow-lg mt-8">
             <h3 className="text-xl font-bold mb-6">Your Needs</h3>
             <HandleNeed />
+          </div>
+          {/* Pollin Section */}
+          <div className="bg-base-100 rounded-3xl p-6 shadow-lg mt-8">
+            <h3 className="text-xl font-bold mb-6">Your Pollins</h3>
+            <HandlePollin />
           </div>
         </div>
       </div>

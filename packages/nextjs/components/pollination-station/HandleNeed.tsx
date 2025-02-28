@@ -30,7 +30,6 @@ const HandleNeed = () => {
   useEffect(() => {
     if (needIds.length > 0) {
       const fetchNeeds = async () => {
-        console.log("needIds", needIds);
         const needsData = await Promise.all(
           needIds.map(async (needId) => {
             const result = await pollinationStationContract?.read.getNeed([needId]);
