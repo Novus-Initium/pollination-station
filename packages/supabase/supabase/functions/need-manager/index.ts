@@ -7,7 +7,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { DaoOperations, NeedInput } from '../utils/dao-operations.ts'
 
 interface NeedRequest {
-  action: 'create' | 'update' | 'fulfill'
+  action: 'create' | 'update' | 'fulfill' | 'updateContractId'
   id?: number
   data?: Partial<NeedInput>
 }
@@ -34,6 +34,10 @@ Deno.serve(async (req) => {
       case 'fulfill':
         if (!id) throw new Error('ID is required for fulfillment')
         result = await daoOps.markNeedFulfilled(id)
+        break
+      case 'updateContractId':
+        if (!id || !data?.contract_need_id) throw new Error('ID and contract_need_id are required')
+        result = await daoOps.updateNeed(id, { contract_need_id: data.contract_need_id })
         break
       default:
         throw new Error('Invalid action')

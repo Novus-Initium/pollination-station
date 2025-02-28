@@ -12,6 +12,7 @@ export interface DaoInput {
 export interface NeedInput {
   dao_id: number
   description: string
+  contract_need_id?: string
 }
 
 
@@ -53,26 +54,27 @@ export class ethContractOperations {
   }
 
   async updatePollenContract(enrichedPollen: any) {
-    try {
+  //   try {
       
-      // Call contract function with pollen data
-          console.log("Updating pollen contract for need:", enrichedPollen[0]);
-          const tx = await this.contract.addPollin(
-          enrichedPollen[0].requesting_dao.public_address,
-          enrichedPollen[0].fulfilling_dao.public_address,
-          enrichedPollen[0].need_id,
-          enrichedPollen[0].collaboration_description,
-          Math.floor(enrichedPollen[0].confidence_score * 100)
-          );
+  //     // Call contract function with pollen data
+  //         console.log("Updating pollen contract for need:", enrichedPollen[0]);
+  //         const tx = await this.contract.addPollin(
+  //         enrichedPollen[0].requesting_dao.public_address,
+  //         enrichedPollen[0].fulfilling_dao.public_address,
+  //         enrichedPollen[0].need_id,
+  //         enrichedPollen[0].collaboration_description,
+  //         Math.floor(enrichedPollen[0].confidence_score * 100)
+  //         );
 
-          await tx.wait();
+  //         await tx.wait();
       
-          console.log("Successfully updated pollen contract for need:", enrichedPollen.need_id);
+  //         console.log("Successfully updated pollen contract for need:", enrichedPollen.need_id);
       
-    } catch (error) {
-      console.error("Error updating pollen contract:", error);
-      throw error;
-    }
+  //   } catch (error) {
+  //     console.error("Error updating pollen contract:", error);
+  //     throw error;
+  //   }
+  // }
   }
 }
 
