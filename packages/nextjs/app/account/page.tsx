@@ -5,11 +5,12 @@ import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { HomeIcon, DocumentTextIcon, TrophyIcon} from "@heroicons/react/24/outline";
 import { Address } from "~~/components/scaffold-eth";
-import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
+import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 import dynamic from "next/dynamic";
 
 const HandleNeed = dynamic(() => import("~~/components/pollination-station/HandleNeed"), { ssr: false });
 const HandlePollin = dynamic(() => import("~~/components/pollination-station/HandlePollin"), { ssr: false });
+const CreateDAOForm = dynamic(() => import("~~/components/pollination-station/CreateDAOForm"), { ssr: false });
 
 const mockDAOs = [
   { id: 1, name: "ClimateDAO", description: "Funding climate projects", members: 342, proposals: 8, match: 92 },
@@ -25,9 +26,6 @@ const mockProposals = [
 const Account: NextPage = () => {
   const { address: connectedAddress } = useAccount();
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [socials, setSocials] = useState("");
 
   // Use the scaffold-eth hook to read the contract
   const { data: daoData } = useScaffoldReadContract({
@@ -36,62 +34,10 @@ const Account: NextPage = () => {
     args: [connectedAddress],
   });
 
-  const { writeContractAsync } = useScaffoldWriteContract({
-    contractName: "PollinationStation",
-  });
   // Check if the DAO account exists
   if (!daoData) {
-
     // If no DAO exists, prompt user to create one
-    return (
-      <div className="flex items-center flex-col flex-grow pt-10">
-        <div className="px-5">
-          <h1 className="text-center mb-8">
-            <span className="block text-2xl mb-2">Create Your DAO</span>
-            <span className="block text-4xl font-bold">Pollination Station 🌸</span>
-          </h1>
-          <form className="space-y-4" onSubmit={(e) => {
-            e.preventDefault();
-          }}>
-            <input 
-              type="text" 
-              placeholder="DAO Title" 
-              className="input input-bordered w-full" 
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <textarea 
-              placeholder="DAO Description" 
-              className="textarea textarea-bordered w-full"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            ></textarea>
-            <input 
-              type="text" 
-              placeholder="Socials" 
-              className="input input-bordered w-full"
-              value={socials}
-              onChange={(e) => setSocials(e.target.value)}
-            />
-            <button
-              className="btn btn-primary w-full"
-              onClick={async () => {
-                try {
-                  await writeContractAsync({
-                    functionName: "addDAO",
-                    args: [title, description, socials],
-                  });
-                } catch (e) {
-                  console.error("Error creating DAO:", e);
-                }
-              }}
-            >
-              Create DAO
-            </button>
-          </form>
-        </div>
-      </div>
-    );
+    return <CreateDAOForm />;
   }
 
   // If DAO exists, display the current interface
