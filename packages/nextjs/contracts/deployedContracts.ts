@@ -264,11 +264,14 @@ const deployedContracts = {
               name: "needIds",
               type: "uint256[]",
             },
+<<<<<<< HEAD
             {
               internalType: "uint256[]",
               name: "pollinIds",
               type: "uint256[]",
             },
+=======
+>>>>>>> web-app
           ],
           stateMutability: "view",
           type: "function",

@@ -1,0 +1,284 @@
+{
+    "info": {
+      "name": "DAO Matching API",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "DAO Operations",
+        "item": [
+          {
+            "name": "Create DAO",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{anon_key}}",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "type": "text"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"action\": \"create\",\n  \"data\": {\n    \"name\": \"Web3 Education DAO\",\n    \"description\": \"We focus on providing educational resources and workshops for web3 development\",\n    \"public_address\": \"0x1234567890123456789012345678901234567890\"\n  }\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/functions/v1/dao-manager",
+                "host": ["{{base_url}}"],
+                "path": ["functions", "v1", "dao-manager"]
+              }
+            }
+          },
+          {
+            "name": "Update DAO",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{anon_key}}",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "type": "text"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"action\": \"update\",\n  \"id\": 1,\n  \"data\": {\n    \"description\": \"We focus on providing educational resources and workshops for web3 development, specializing in smart contract development\"\n  }\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/functions/v1/dao-manager",
+                "host": ["{{base_url}}"],
+                "path": ["functions", "v1", "dao-manager"]
+              }
+            }
+          },
+          {
+            "name": "Get DAO by Public Address",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{anon_key}}",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "type": "text"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"action\": \"get\",\n  \"publicAddress\": \"0x1234567890123456789012345678901234567890\",\n  \"data\": {}\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/functions/v1/dao-manager",
+                "host": ["{{base_url}}"],
+                "path": ["functions", "v1", "dao-manager"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Need Operations",
+        "item": [
+          {
+            "name": "Create Need",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{anon_key}}",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "type": "text"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"action\": \"create\",\n  \"data\": {\n    \"dao_id\": 1,\n    \"description\": \"Looking for experienced Solidity developers to help create educational content\",\n    \"contract_need_id\": \"0x123abc456def789\"\n  }\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/functions/v1/need-manager",
+                "host": ["{{base_url}}"],
+                "path": ["functions", "v1", "need-manager"]
+              }
+            }
+          },
+          {
+            "name": "Update Need",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{anon_key}}",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "type": "text"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"action\": \"update\",\n  \"id\": 1,\n  \"data\": {\n    \"description\": \"Looking for experienced Solidity developers to help create educational content and run workshops\",\n    \"contract_need_id\": \"0x123abc456def789\"\n  }\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/functions/v1/need-manager",
+                "host": ["{{base_url}}"],
+                "path": ["functions", "v1", "need-manager"]
+              }
+            }
+          },
+          {
+            "name": "Update Contract Need ID",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{anon_key}}",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "type": "text"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"action\": \"updateContractId\",\n  \"id\": 1,\n  \"data\": {\n    \"contract_need_id\": \"0x987fed654cba321\"\n  }\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/functions/v1/need-manager",
+                "host": ["{{base_url}}"],
+                "path": ["functions", "v1", "need-manager"]
+              }
+            }
+          },
+          {
+            "name": "Mark Need as Fulfilled",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{anon_key}}",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "type": "text"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"action\": \"fulfill\",\n  \"id\": 1\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/functions/v1/need-manager",
+                "host": ["{{base_url}}"],
+                "path": ["functions", "v1", "need-manager"]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "name": "Pollen Queries",
+        "item": [
+          {
+            "name": "Get Pollen by DAO",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{anon_key}}",
+                  "type": "text"
+                }
+              ],
+              "url": {
+                "raw": "{{base_url}}/functions/v1/pollen-query?dao_id=1",
+                "host": ["{{base_url}}"],
+                "path": ["functions", "v1", "pollen-query"],
+                "query": [
+                  {
+                    "key": "dao_id",
+                    "value": "1"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Get Pollen by Need",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{anon_key}}",
+                  "type": "text"
+                }
+              ],
+              "url": {
+                "raw": "{{base_url}}/functions/v1/pollen-query?need_id=1",
+                "host": ["{{base_url}}"],
+                "path": ["functions", "v1", "pollen-query"],
+                "query": [
+                  {
+                    "key": "need_id",
+                    "value": "1"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "Get High Confidence Matches",
+            "request": {
+              "method": "GET",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{anon_key}}",
+                  "type": "text"
+                }
+              ],
+              "url": {
+                "raw": "{{base_url}}/functions/v1/pollen-query?min_confidence=0.8",
+                "host": ["{{base_url}}"],
+                "path": ["functions", "v1", "pollen-query"],
+                "query": [
+                  {
+                    "key": "min_confidence",
+                    "value": "0.8"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
