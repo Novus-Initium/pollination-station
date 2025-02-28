@@ -26,8 +26,8 @@ export class ethContractOperations {
     const rpcUrl = Deno.env.get('ETH_RPC_URL');
     const isProduction = Deno.env.get('ENVIRONMENT') === 'production';
     const networkName = Deno.env.get('ETH_NETWORK');
-    const contractABI = require(Deno.env.get('ETH_CONTRACT_ABI')).abi
-
+    const contractABI = JSON.parse(Deno.env.get('ETH_CONTRACT_FILE')).abi
+    console.log(contractABI);
     
     if (!privateKey || !contractAddress) {
       throw new Error('Missing required environment variables ETH_PRIVATE_KEY or ETH_CONTRACT_ADDRESS');
@@ -54,21 +54,21 @@ export class ethContractOperations {
 
   async updatePollenContract(enrichedPollen: any) {
     try {
+      
       // Call contract function with pollen data
-      const tx = await this.contract.updatePollen(
-        enrichedPollen.need_id,
-        enrichedPollen.requesting_dao.public_address,
-        enrichedPollen.fulfilling_dao.public_address,
-        enrichedPollen.confidence_score
-      );
+          console.log("Updating pollen contract for need:", enrichedPollen[0]);
+          const tx = await this.contract.addPollin(
+          enrichedPollen[0].requesting_dao.public_address,
+          enrichedPollen[0].fulfilling_dao.public_address,
+          enrichedPollen[0].need_id,
+          enrichedPollen[0].collaboration_description,
+          Math.floor(enrichedPollen[0].confidence_score * 100)
+          );
 
-      // Wait for transaction to be mined
-      await tx.wait();
+          await tx.wait();
       
-      console.log("Successfully updated pollen contract for need:", enrichedPollen.need_id);
+          console.log("Successfully updated pollen contract for need:", enrichedPollen.need_id);
       
-      return tx;
-
     } catch (error) {
       console.error("Error updating pollen contract:", error);
       throw error;
@@ -174,6 +174,7 @@ export class DaoOperations {
     
     // Generate initial pollen
     var pollen = await this.updatePollenForNeed(data.id)
+    console.log("Pollen:", pollen);
     await this.ethContractOperations.updatePollenContract(pollen)
     
     return data
@@ -232,7 +233,7 @@ export class DaoOperations {
       'find_dao_matches',
       { 
         need_id: needId,
-        similarity_threshold: 0.7 
+        similarity_threshold: 0.0
       }
     )
 
@@ -274,6 +275,7 @@ export class DaoOperations {
   async updatePollenForNeed(needId: number): Promise<Pollen[]> {
     try {
       const matches = await this.findPotentialMatches(needId)
+      console.log("Matches:", matches);
       const results: Pollen[] = []
 
       const { data: need } = await this.supabase
@@ -295,6 +297,14 @@ export class DaoOperations {
           need.daos.name,
           fulfillingDao.name
         )
+
+        console.log("Collaboration description:", {
+          need_id: needId,
+          requesting_dao_id: match.requesting_dao_id,
+          fulfilling_dao_id: match.fulfilling_dao_id,
+          collaboration_description: collaborationDescription,
+          confidence_score: match.similarity_score
+        });
 
         const { data: pollen, error } = await this.supabase
           .from('pollen')
