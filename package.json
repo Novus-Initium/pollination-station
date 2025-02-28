@@ -60,6 +60,7 @@
     "node": ">=20.18.3"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
     "dotenv": "^16.4.7",
     "ethers": "5.7.2",
     "express": "^4.21.2"
