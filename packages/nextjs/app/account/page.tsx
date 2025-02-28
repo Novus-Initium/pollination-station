@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
-import { BellIcon, HomeIcon, UsersIcon, DocumentTextIcon, TrophyIcon, PlusIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { HomeIcon, DocumentTextIcon, TrophyIcon} from "@heroicons/react/24/outline";
 import { Address } from "~~/components/scaffold-eth";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import dynamic from "next/dynamic";

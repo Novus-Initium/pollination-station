@@ -15,7 +15,6 @@ const HandlePollin = () => {
   const [daoWithOffering, setDaoWithOffering] = useState("");
   const [descriptionOfRelationship, setDescriptionOfRelationship] = useState("");
   const [confidence, setConfidence] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
   const [isLoadingNeeds, setIsLoadingNeeds] = useState(false);
   const [isLoadingPollins, setIsLoadingPollins] = useState(false);
 
