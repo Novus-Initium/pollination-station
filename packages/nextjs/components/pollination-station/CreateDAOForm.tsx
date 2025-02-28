@@ -5,7 +5,7 @@ import { useAccount } from "wagmi";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 
 const CreateDAOForm = () => {
-  const { address: connectedAddress } = useAccount();
+//   const { address: connectedAddress } = useAccount();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [socials, setSocials] = useState("");

@@ -3,10 +3,10 @@
 import { useState } from "react";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
-import { HomeIcon, DocumentTextIcon, TrophyIcon} from "@heroicons/react/24/outline";
 import { Address } from "~~/components/scaffold-eth";
 import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 import dynamic from "next/dynamic";
+import NavigationTabs from "~~/components/pollination-station/NavigationTabs";
 
 const HandleNeed = dynamic(() => import("~~/components/pollination-station/HandleNeed"), { ssr: false });
 const HandlePollin = dynamic(() => import("~~/components/pollination-station/HandlePollin"), { ssr: false });
@@ -25,7 +25,7 @@ const mockProposals = [
 
 const Account: NextPage = () => {
   const { address: connectedAddress } = useAccount();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [setActiveTab] = useState('dashboard');
 
   // Use the scaffold-eth hook to read the contract
   const { data: daoData } = useScaffoldReadContract({
@@ -57,24 +57,7 @@ const Account: NextPage = () => {
 
         <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
           {/* Navigation Tabs */}
-          <div className="flex justify-center mb-8 gap-4">
-            {[
-              {id: 'dashboard', icon: HomeIcon, label: 'Dashboard'},
-              {id: 'proposals', icon: DocumentTextIcon, label: 'Proposals'},
-              {id: 'matches', icon: TrophyIcon, label: 'Matches'}
-            ].map(tab => (
-              <button 
-                key={tab.id}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full ${
-                  activeTab === tab.id ? 'bg-secondary text-primary-content' : 'bg-base-100'
-                }`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                <tab.icon className="h-5 w-5" />
-                <span>{tab.label}</span>
-              </button>
-            ))}
-          </div>
+          <NavigationTabs onTabChange={setActiveTab} />
 
           {/* Dashboard Content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
