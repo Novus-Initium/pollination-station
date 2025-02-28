@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     PollinationStation: {
-      address: "0x9A676e781A523b5d0C0e43731313A708CB607508",
+      address: "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE",
       abi: [
         {
           inputs: [
@@ -203,6 +203,25 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "daoAddresses",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
               internalType: "address",
               name: "",
               type: "address",
@@ -229,6 +248,51 @@ const deployedContracts = {
               internalType: "string",
               name: "socials",
               type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getAllDAOs",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "daoAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "title",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "description",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "socials",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256[]",
+                  name: "needIds",
+                  type: "uint256[]",
+                },
+                {
+                  internalType: "uint256[]",
+                  name: "pollinIds",
+                  type: "uint256[]",
+                },
+              ],
+              internalType: "struct PollinationStation.DAO[]",
+              name: "",
+              type: "tuple[]",
             },
           ],
           stateMutability: "view",
@@ -268,6 +332,19 @@ const deployedContracts = {
               internalType: "uint256[]",
               name: "pollinIds",
               type: "uint256[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getDAOCount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
             },
           ],
           stateMutability: "view",

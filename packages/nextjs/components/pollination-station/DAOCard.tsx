@@ -18,7 +18,6 @@ const DAOCard: React.FC<DAOCardProps> = ({ id, name, description, match }) => {
             <h4 className="font-bold">{name}</h4>
             <p className="text-sm opacity-70">{description}</p>
         </div>
-        <div className="badge badge-secondary">{match}% Match</div>
         </div>
     );
     };

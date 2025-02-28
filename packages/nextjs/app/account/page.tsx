@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { Address } from "~~/components/scaffold-eth";
@@ -14,13 +14,12 @@ const HandleNeed = dynamic(() => import("~~/components/pollination-station/Handl
 const HandlePollin = dynamic(() => import("~~/components/pollination-station/HandlePollin"), { ssr: false });
 const CreateDAOForm = dynamic(() => import("~~/components/pollination-station/CreateDAOForm"), { ssr: false });
 
+// Fallback mock data in case the contract data isn't available
 const mockDAOs = [
   { id: 1, name: "ClimateDAO", description: "Funding climate projects", members: 342, proposals: 8, match: 92 },
   { id: 2, name: "EduDAO", description: "Improving educational access", members: 189, proposals: 5, match: 85 },
   { id: 3, name: "DevDAO", description: "Supporting open source developers", members: 567, proposals: 12, match: 78 },
 ];
-
-
 
 const mockProposals = [
   { id: 1, title: "Joint Climate Hackathon", dao: "ClimateDAO", status: "Active", votes: 78, created: "2d ago" },
@@ -30,13 +29,36 @@ const mockProposals = [
 const Account: NextPage = () => {
   const { address: connectedAddress } = useAccount();
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [daos, setDaos] = useState<any[]>([]);
 
-  // Use the scaffold-eth hook to read the contract
+  // Use the scaffold-eth hook to read the contract for the current user's DAO
   const { data: daoData } = useScaffoldReadContract({
     contractName: "PollinationStation",
     functionName: "getDAO",
     args: [connectedAddress],
   });
+
+  // Get all DAOs from the contract
+  const { data: allDAOsData } = useScaffoldReadContract({
+    contractName: "PollinationStation",
+    functionName: "getAllDAOs",
+  });
+
+  // Process the DAOs data when it's available
+  useEffect(() => {
+    if (allDAOsData) {
+      const formattedDaos = (allDAOsData as any[]).map((dao, index) => ({
+        id: index + 1,
+        name: dao.title,
+        description: dao.description,
+        address: dao.daoAddress,
+        members: Math.floor(Math.random() * 500) + 100, // Mock data for members
+        proposals: dao.needIds?.length || 0,
+      }));
+      setDaos(formattedDaos);
+      console.log(formattedDaos)
+    }
+  }, [allDAOsData]);
 
   console.log("activeTab", activeTab);
 
@@ -67,16 +89,34 @@ const Account: NextPage = () => {
 
           {/* Dashboard Content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Top Matches */}
+            {/* All DAOs */}
             <div className="bg-base-100 rounded-3xl p-6 shadow-lg">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold">Top Matches</h3>
+                <h3 className="text-xl font-bold">All DAOs</h3>
                 <button className="btn btn-sm btn-secondary">View All</button>
               </div>
               <div className="space-y-4">
-                {mockDAOs.map(dao => (
-                  <DAOCard key={dao.id} id={dao.id} name={dao.name} description={dao.description} match={dao.match} />
-                ))}
+                {daos.length > 0 ? (
+                  daos.map(dao => (
+                    <DAOCard 
+                      key={dao.id} 
+                      id={dao.id} 
+                      name={dao.name} 
+                      description={dao.description} 
+                      match={dao.match} 
+                    />
+                  ))
+                ) : (
+                  mockDAOs.map(dao => (
+                    <DAOCard 
+                      key={dao.id} 
+                      id={dao.id} 
+                      name={dao.name} 
+                      description={dao.description} 
+                      match={dao.match} 
+                    />
+                  ))
+                )}
               </div>
             </div>
 

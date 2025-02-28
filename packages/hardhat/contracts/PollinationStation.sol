@@ -39,6 +39,7 @@ contract PollinationStation {
     // Counters for unique IDs
     uint256 public needCount;
     uint256 public pollinCount;
+    address[] public daoAddresses; // Array to keep track of all DAO addresses
 
     // Events for off-chain indexing (e.g., The Graph)
     event DAOCreated(address indexed daoAddress, string title, string description, string socials);
@@ -70,6 +71,7 @@ contract PollinationStation {
             pollinIds: new uint256[](0) // Initialize empty array
         });
 
+        daoAddresses.push(daoAddress); // Add the address to our tracking array
         emit DAOCreated(daoAddress, _title, _description, _socials);
     }
 
@@ -165,5 +167,21 @@ contract PollinationStation {
         Pollin memory p = pollins[_pollinId];
         require(p.pollinId != 0, "Pollin does not exist");
         return (p.daoWithNeed, p.daoWithOffering, p.needId, p.descriptionOfRelationship, p.confidence);
+    }
+
+    // Function to get all DAOs
+    function getAllDAOs() public view returns (DAO[] memory) {
+        DAO[] memory allDAOs = new DAO[](daoAddresses.length);
+        
+        for (uint256 i = 0; i < daoAddresses.length; i++) {
+            allDAOs[i] = daos[daoAddresses[i]];
+        }
+        
+        return allDAOs;
+    }
+    
+    // Function to get the count of DAOs
+    function getDAOCount() public view returns (uint256) {
+        return daoAddresses.length;
     }
 }
