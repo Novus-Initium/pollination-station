@@ -79,6 +79,7 @@ export class ethContractOperations {
 export class DaoOperations {
   private supabase: SupabaseClient
   private openai: OpenAIApi
+  private ethContractOperations: ethContractOperations
 
   constructor() {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
@@ -98,6 +99,10 @@ export class DaoOperations {
     this.openai = new OpenAIApi(new Configuration({
       apiKey: openaiKey
     }))
+
+    // setup eth contract operations
+    this.ethContractOperations = new ethContractOperations()
+
   }
 
   private async generateEmbedding(text: string): Promise<number[]> {
@@ -168,7 +173,8 @@ export class DaoOperations {
     if (error) throw error
     
     // Generate initial pollen
-    await this.updatePollenForNeed(data.id)
+    var pollen = await this.updatePollenForNeed(data.id)
+    await this.ethContractOperations.updatePollenContract(pollen)
     
     return data
   }
@@ -191,7 +197,8 @@ export class DaoOperations {
     
     // Update pollen if description changed
     if (input.description) {
-      await this.updatePollenForNeed(id)
+      var pollen = await this.updatePollenForNeed(id)
+      await this.ethContractOperations.updatePollenContract(pollen)
     }
     
     return data
@@ -346,7 +353,8 @@ export class DaoOperations {
       ])
 
       for (const needId of needsToUpdate) {
-        await this.updatePollenForNeed(needId)
+        var pollen = await this.updatePollenForNeed(needId)
+        await this.ethContractOperations.updatePollenContract(pollen)
       }
     } catch (error) {
       console.error('Error updating pollen for DAO:', error)
