@@ -188,15 +188,21 @@ const HandlePollin = () => {
           {
           
           pollins.length > 0 ? (
-            <ul>
+            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {pollins.map((pollinItem, index) => (
                 <li key={index} className="mb-4">
-                  <div className="bg-base-100 rounded-3xl p-6 shadow-lg">
-                    <p className="text-sm opacity-70">DAO with Need: {pollinItem[0]}</p>
-                    <p className="text-sm opacity-70">DAO with Offering: {pollinItem[1]}</p>
-                    <p className="text-sm opacity-70">Need ID: {(pollinItem[2] as BigInt).toString()}</p>
-                    <p className="text-sm opacity-70">Description: {pollinItem[3]}</p>
-                    <p className="text-sm opacity-70">Confidence: {(pollinItem[4] as BigInt).toString()}</p>
+                  <div className="bg-base-100 rounded-3xl p-6 shadow-lg transform transition duration-500 hover:scale-105">
+                    <div className="flex items-center mb-4">
+                      <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
+                        {index + 1}
+                      </div>
+                      <h3 className="text-xl font-bold ml-4">Pollin #{index + 1}</h3>
+                    </div>
+                    <p className="text-sm opacity-70 mb-2">DAO with Need: {pollinItem[0]}</p>
+                    <p className="text-sm opacity-70 mb-2">DAO with Offering: {pollinItem[1]}</p>
+                    <p className="text-sm opacity-70 mb-2">Need ID: {(pollinItem[2] as BigInt).toString()}</p>
+                    <p className="text-sm opacity-70 mb-2">Description: {pollinItem[3]}</p>
+                    <p className="text-sm opacity-70 mb-2">Confidence: {(pollinItem[4] as BigInt).toString()}</p>
                   </div>
                 </li>
               ))}
