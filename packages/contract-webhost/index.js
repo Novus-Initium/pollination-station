@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
 // Set up Ethereum provider and contract
 const setupEthereumWatcher = async () => {
   try {
-    const provider = new ethers.providers.JsonRpcProvider(
+    const provider = new ethers.JsonRpcProvider(
       process.env.ETHEREUM_RPC_URL
     );
     const contractAddress = process.env.CONTRACT_ADDRESS;
@@ -79,7 +79,7 @@ const setupEthereumWatcher = async () => {
       async (needId, daoAddress, description, event) => {
         console.log("NeedCreated Event detected");
 
-        const needIdAsNumber = needId.toNumber();
+        const needIdAsNumber = Number(needId);
 
         console.log(daoAddress);
         console.log(needIdAsNumber);
