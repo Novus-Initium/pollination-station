@@ -60,6 +60,33 @@
                 "path": ["functions", "v1", "dao-manager"]
               }
             }
+          },
+          {
+            "name": "Get DAO by Public Address",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{anon_key}}",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "type": "text"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"action\": \"get\",\n  \"publicAddress\": \"0x1234567890123456789012345678901234567890\",\n  \"data\": {}\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/functions/v1/dao-manager",
+                "host": ["{{base_url}}"],
+                "path": ["functions", "v1", "dao-manager"]
+              }
+            }
           }
         ]
       },

@@ -160,6 +160,28 @@ export class DaoOperations {
     return data
   }
 
+  async getDao(id: number): Promise<Dao> {
+    const { data, error } = await this.supabase
+      .from('daos')
+      .select()
+      .eq('id', id)
+      .single()
+
+    if (error) throw error
+    return data
+  }
+
+  async getDaoByPublicAddress(publicAddress: string): Promise<Dao> {
+    const { data, error } = await this.supabase
+      .from('daos')
+      .select()
+      .eq('public_address', publicAddress)
+      .single()
+
+    if (error) throw error
+    return data
+  }
+
   async createNeed(input: NeedInput): Promise<Need> {
     const embedding = await this.generateEmbedding(input.description)
     
