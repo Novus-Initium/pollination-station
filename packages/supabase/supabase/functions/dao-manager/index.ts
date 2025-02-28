@@ -7,8 +7,9 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import { DaoOperations, DaoInput } from '../utils/dao-operations.ts'
 
 interface DaoRequest {
-  action: 'create' | 'update'
+  action: 'create' | 'update' | 'get'
   id?: number
+  publicAddress?: string
   data: Partial<DaoInput>
 }
 
@@ -69,9 +70,9 @@ Deno.serve(async (req) => {
     }
     
     const daoOps = new DaoOperations();
-    const { action, id, data } = requestData;
+    const { action, id, publicAddress, data } = requestData;
 
-    console.log("DAO Request:", action, id, data)
+    console.log("DAO Request:", action, id, publicAddress, data)
 
     let result
     switch (action) {
@@ -81,6 +82,10 @@ Deno.serve(async (req) => {
       case 'update':
         if (!id) throw new Error('ID is required for updates')
         result = await daoOps.updateDao(id, data)
+        break
+      case 'get':
+        if (!publicAddress) throw new Error('Public address is required for get')
+        result = await daoOps.getDaoByPublicAddress(publicAddress)
         break
       default:
         throw new Error('Invalid action')
