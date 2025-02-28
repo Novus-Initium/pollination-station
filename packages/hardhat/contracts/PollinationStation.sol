@@ -10,7 +10,8 @@ contract PollinationStation {
         string title; // DAO title
         string description; // DAO description
         string socials; // Social media links or info
-        uint256[] needIds; // Array of Need IDs associated with this DAO
+        uint256[] needIds; // Array of Need IDs associated with this 
+        uint256[] pollinIds; // Array of Pollin IDs associated with this DAO
     }
 
     // Need struct
@@ -65,7 +66,8 @@ contract PollinationStation {
             title: _title,
             description: _description,
             socials: _socials,
-            needIds: new uint256[](0) // Initialize empty array
+            needIds: new uint256[](0), // Initialize empty array
+            pollinIds: new uint256[](0) // Initialize empty array
         });
 
         emit DAOCreated(daoAddress, _title);
@@ -133,11 +135,11 @@ contract PollinationStation {
     )
         public
         view
-        returns (string memory title, string memory description, string memory socials, uint256[] memory needIds)
+        returns (string memory title, string memory description, string memory socials, uint256[] memory needIds, uint256[] memory pollinIds)
     {
         DAO memory d = daos[_daoAddress];
         require(d.daoAddress != address(0), "DAO does not exist");
-        return (d.title, d.description, d.socials, d.needIds);
+        return (d.title, d.description, d.socials, d.needIds, d.pollinIds);
     }
 
     function getNeed(uint256 _needId) public view returns (string memory description, address dao) {
