@@ -199,9 +199,9 @@ const HandlePollin = () => {
                     </div>
                     <p className="text-sm opacity-70 mb-2">DAO with Need: {pollinItem[0]}</p>
                     <p className="text-sm opacity-70 mb-2">DAO with Offering: {pollinItem[1]}</p>
-                    <p className="text-sm opacity-70 mb-2">Need ID: {(pollinItem[2] as BigInt).toString()}</p>
+                    <p className="text-sm opacity-70 mb-2">Need ID: {(pollinItem[2] as bigint).toString()}</p>
                     <p className="text-sm opacity-70 mb-2">Description: {pollinItem[3]}</p>
-                    <p className="text-sm opacity-70 mb-2">Confidence: {(pollinItem[4] as BigInt).toString()}</p>
+                    <p className="text-sm opacity-70 mb-2">Confidence: {(pollinItem[4] as bigint).toString()}</p>
                   </div>
                 </li>
               ))}

@@ -81,7 +81,7 @@ const Home: NextPage = () => {
               </svg>
               <h3 className="text-lg font-semibold mt-4">Find Opportunities</h3>
               <p className="mt-2">
-                Discover collaboration opportunities, joint initiatives, and ways to amplify your DAO's impact.
+                Discover collaboration opportunities, joint initiatives, and ways to amplify your DAOs impact.
               </p>
             </div>
           </div>

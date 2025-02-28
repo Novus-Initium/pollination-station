@@ -10,17 +10,6 @@ import dynamic from "next/dynamic";
 
 const HandleNeed = dynamic(() => import("~~/components/pollination-station/HandleNeed"), { ssr: false });
 const HandlePollin = dynamic(() => import("~~/components/pollination-station/HandlePollin"), { ssr: false });
-interface DAOAccount {
-  name: string;
-  description: string;
-  needs: string[];
-}
-
-const defaultAccount: DAOAccount = {
-  name: "",
-  description: "", 
-  needs: []
-};
 
 const mockDAOs = [
   { id: 1, name: "ClimateDAO", description: "Funding climate projects", members: 342, proposals: 8, match: 92 },
@@ -41,7 +30,7 @@ const Account: NextPage = () => {
   const [socials, setSocials] = useState("");
 
   // Use the scaffold-eth hook to read the contract
-  const { data: daoData, isLoading } = useScaffoldReadContract({
+  const { data: daoData } = useScaffoldReadContract({
     contractName: "PollinationStation",
     functionName: "getDAO",
     args: [connectedAddress],
