@@ -7,6 +7,7 @@ import { Address } from "~~/components/scaffold-eth";
 import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 import dynamic from "next/dynamic";
 import NavigationTabs from "~~/components/pollination-station/NavigationTabs";
+import DAOCard from "~~/components/pollination-station/DAOCard";
 
 const HandleNeed = dynamic(() => import("~~/components/pollination-station/HandleNeed"), { ssr: false });
 const HandlePollin = dynamic(() => import("~~/components/pollination-station/HandlePollin"), { ssr: false });
@@ -70,13 +71,7 @@ const Account: NextPage = () => {
               </div>
               <div className="space-y-4">
                 {mockDAOs.map(dao => (
-                  <div key={dao.id} className="flex items-center justify-between p-4 bg-base-200 rounded-xl">
-                    <div>
-                      <h4 className="font-bold">{dao.name}</h4>
-                      <p className="text-sm opacity-70">{dao.description}</p>
-                    </div>
-                    <div className="badge badge-secondary">{dao.match}% Match</div>
-                  </div>
+                  <DAOCard key={dao.id} id={dao.id} name={dao.name} description={dao.description} match={dao.match} />
                 ))}
               </div>
             </div>
