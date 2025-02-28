@@ -25,7 +25,7 @@ const mockProposals = [
 
 const Account: NextPage = () => {
   const { address: connectedAddress } = useAccount();
-  const [setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('dashboard');
 
   // Use the scaffold-eth hook to read the contract
   const { data: daoData } = useScaffoldReadContract({
@@ -38,6 +38,7 @@ const Account: NextPage = () => {
   if (!daoData) {
     // If no DAO exists, prompt user to create one
     return <CreateDAOForm />;
+    console.log(activeTab)
   }
 
   // If DAO exists, display the current interface
