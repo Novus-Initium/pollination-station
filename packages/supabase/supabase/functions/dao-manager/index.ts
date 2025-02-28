@@ -18,8 +18,60 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const daoOps = new DaoOperations()
-    const { action, id, data }: DaoRequest = await req.json()
+    // Log the raw request for debugging
+    const rawBody = await req.text();
+    console.log("Raw request body:", rawBody);
+    
+    // Parse JSON manually with error handling
+    let requestData;
+    try {
+      requestData = JSON.parse(rawBody);
+      console.log("Parsed request data:", requestData);
+    } catch (parseError) {
+      console.error("JSON parse error:", parseError);
+      return new Response(
+        JSON.stringify({ error: `Failed to parse JSON: ${parseError.message}` }),
+        { 
+          headers: { 
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          },
+          status: 400
+        }
+      );
+    }
+    
+    // Validate the request structure
+    if (!requestData.action) {
+      return new Response(
+        JSON.stringify({ error: "Missing required field 'action'" }),
+        { 
+          headers: { 
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          },
+          status: 400
+        }
+      );
+    }
+    
+    if (!requestData.data) {
+      return new Response(
+        JSON.stringify({ error: "Missing required field 'data'" }),
+        { 
+          headers: { 
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          },
+          status: 400
+        }
+      );
+    }
+    
+    const daoOps = new DaoOperations();
+    const { action, id, data } = requestData;
+
+    console.log("DAO Request:", action, id, data)
 
     let result
     switch (action) {
@@ -44,6 +96,7 @@ Deno.serve(async (req) => {
       }
     )
   } catch (error) {
+    
     return new Response(
       JSON.stringify({ error: error.message }),
       { 
@@ -62,9 +115,9 @@ Deno.serve(async (req) => {
   1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
   2. Make an HTTP request:
 
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/DAOoperation' \
+  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/dao-manager' \
     --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
     --header 'Content-Type: application/json' \
-    --data '{"name":"Functions"}'
+    --data '{"action": "create", "data": {"name": "Functions", "description": "A new DAO for managing functions"}}'
 
 */

@@ -84,7 +84,7 @@
               ],
               "body": {
                 "mode": "raw",
-                "raw": "{\n  \"action\": \"create\",\n  \"data\": {\n    \"dao_id\": 1,\n    \"description\": \"Looking for experienced Solidity developers to help create educational content\"\n  }\n}"
+                "raw": "{\n  \"action\": \"create\",\n  \"data\": {\n    \"dao_id\": 1,\n    \"description\": \"Looking for experienced Solidity developers to help create educational content\",\n    \"contract_need_id\": \"0x123abc456def789\"\n  }\n}"
               },
               "url": {
                 "raw": "{{base_url}}/functions/v1/need-manager",
@@ -111,7 +111,34 @@
               ],
               "body": {
                 "mode": "raw",
-                "raw": "{\n  \"action\": \"update\",\n  \"id\": 1,\n  \"data\": {\n    \"description\": \"Looking for experienced Solidity developers to help create educational content and run workshops\"\n  }\n}"
+                "raw": "{\n  \"action\": \"update\",\n  \"id\": 1,\n  \"data\": {\n    \"description\": \"Looking for experienced Solidity developers to help create educational content and run workshops\",\n    \"contract_need_id\": \"0x123abc456def789\"\n  }\n}"
+              },
+              "url": {
+                "raw": "{{base_url}}/functions/v1/need-manager",
+                "host": ["{{base_url}}"],
+                "path": ["functions", "v1", "need-manager"]
+              }
+            }
+          },
+          {
+            "name": "Update Contract Need ID",
+            "request": {
+              "method": "POST",
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{anon_key}}",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "type": "text"
+                }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"action\": \"updateContractId\",\n  \"id\": 1,\n  \"data\": {\n    \"contract_need_id\": \"0x987fed654cba321\"\n  }\n}"
               },
               "url": {
                 "raw": "{{base_url}}/functions/v1/need-manager",

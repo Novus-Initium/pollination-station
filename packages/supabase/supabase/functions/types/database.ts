@@ -15,6 +15,7 @@ export interface Need {
     embedding: number[] | null;
     is_fulfilled: boolean;
     fulfilled_at: string | null;
+    contract_need_id: string | null;
     created_at: string;
     updated_at: string;
 }
