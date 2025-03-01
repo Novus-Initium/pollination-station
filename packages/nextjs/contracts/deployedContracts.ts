@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     PollinationStation: {
-      address: "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE",
+      address: "0x4964a80dCF9B4f9005b0476BA2ce54620d774216",
       abi: [
         {
           inputs: [
@@ -248,51 +248,6 @@ const deployedContracts = {
               internalType: "string",
               name: "socials",
               type: "string",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "getAllDAOs",
-          outputs: [
-            {
-              components: [
-                {
-                  internalType: "address",
-                  name: "daoAddress",
-                  type: "address",
-                },
-                {
-                  internalType: "string",
-                  name: "title",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "description",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "socials",
-                  type: "string",
-                },
-                {
-                  internalType: "uint256[]",
-                  name: "needIds",
-                  type: "uint256[]",
-                },
-                {
-                  internalType: "uint256[]",
-                  name: "pollinIds",
-                  type: "uint256[]",
-                },
-              ],
-              internalType: "struct PollinationStation.DAO[]",
-              name: "",
-              type: "tuple[]",
             },
           ],
           stateMutability: "view",
